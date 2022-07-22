@@ -3,7 +3,7 @@ package com.sterndu.json;
 import java.util.Locale;
 import java.util.function.Function;
 
-public class DoubleValue implements JsonValue {
+public class DoubleValue implements NumberValue {
 
 	private double value = 0.0d;
 
@@ -11,7 +11,10 @@ public class DoubleValue implements JsonValue {
 		this.value = value;
 	}
 
-	public double getValue() { return value; }
+	@Override
+	public Number getValue() { return value; }
+
+	public double getValueDouble() { return value; }
 
 	public void setValue(double value) { this.value = value; }
 

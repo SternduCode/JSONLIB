@@ -1,8 +1,7 @@
 package com.sterndu.json;
 
 import java.io.*;
-import java.math.BigDecimal;
-import java.math.BigInteger;
+import java.math.*;
 import java.util.Arrays;
 
 public class JsonParser {
@@ -82,28 +81,25 @@ public class JsonParser {
 						BigDecimal bd=new BigDecimal(sb1.toString());
 						double d=bd.doubleValue();
 						if (bd.compareTo(new BigDecimal(d))==0) {
-						long l=(long) d;
-						if (l==d) {
-							l=Long.parseLong(sb1.toString());
-							byte b=(byte) l;
-							short s=(short) l;
-							int i=(int) l;
-							if (b==l) return new ByteValue(b);
-							else if (s==l) return new ShortValue(s);
-							else if (i==l) return new IntegerValue(i);
-							else return new LongValue(l);
-						} else {
-							float f=(float) d;
-							if (f==d) return new FloatValue(f);
-							else return new DoubleValue(d);
-						}
+							long l=(long) d;
+							if (l==d) {
+								l=Long.parseLong(sb1.toString());
+								byte b=(byte) l;
+								short s=(short) l;
+								int i=(int) l;
+								if (b==l) return new ByteValue(b);
+								else if (s==l) return new ShortValue(s);
+								else if (i==l) return new IntegerValue(i);
+								else return new LongValue(l);
+							} else {
+								float f=(float) d;
+								if (f==d) return new FloatValue(f);
+								else return new DoubleValue(d);
+							}
 						} else {
 							BigInteger bi=bd.toBigInteger();
-							if (bd.compareTo(new BigDecimal(bi))==0) {
-								return new BigIntegerValue(bi);
-							} else {
-								return new BigDecimalValue(bd);
-							}
+							if (bd.compareTo(new BigDecimal(bi))==0) return new BigIntegerValue(bi);
+							else return new BigDecimalValue(bd);
 						}
 					} catch (NumberFormatException e) {
 						throw new JsonParseException("Not a correct Json-format");

@@ -2,7 +2,7 @@ package com.sterndu.json;
 
 import java.util.function.Function;
 
-public class LongValue implements JsonValue {
+public class LongValue implements NumberValue {
 
 	private long value = 0;
 
@@ -10,7 +10,10 @@ public class LongValue implements JsonValue {
 		this.value = value;
 	}
 
-	public long getValue() { return value; }
+	@Override
+	public Number getValue() { return value; }
+
+	public long getValueLong() { return value; }
 
 	public void setValue(long value) { this.value = value; }
 

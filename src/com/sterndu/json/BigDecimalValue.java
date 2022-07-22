@@ -3,7 +3,7 @@ package com.sterndu.json;
 import java.math.BigDecimal;
 import java.util.function.Function;
 
-public class BigDecimalValue implements JsonValue {
+public class BigDecimalValue implements NumberValue {
 
 	private BigDecimal value = BigDecimal.valueOf(0.0d);
 
@@ -11,7 +11,10 @@ public class BigDecimalValue implements JsonValue {
 		this.value = value;
 	}
 
-	public BigDecimal getValue() { return value; }
+	@Override
+	public Number getValue() { return value; }
+
+	public BigDecimal getValueBigDecimal() { return value; }
 
 	public void setValue(BigDecimal value) { this.value = value; }
 

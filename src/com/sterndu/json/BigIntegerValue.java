@@ -3,7 +3,7 @@ package com.sterndu.json;
 import java.math.BigInteger;
 import java.util.function.Function;
 
-public class BigIntegerValue implements JsonValue {
+public class BigIntegerValue implements NumberValue {
 
 	private BigInteger value = BigInteger.valueOf(0l);
 
@@ -11,7 +11,10 @@ public class BigIntegerValue implements JsonValue {
 		this.value = value;
 	}
 
-	public BigInteger getValue() { return value; }
+	@Override
+	public Number getValue() { return value; }
+
+	public BigInteger getValueBigInteger() { return value; }
 
 	public void setValue(BigInteger value) { this.value = value; }
 
