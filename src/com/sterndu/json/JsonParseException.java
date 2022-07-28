@@ -9,8 +9,8 @@ public class JsonParseException extends Exception {
 
 	public JsonParseException() {}
 
-	public JsonParseException(String string) {
-		super(string);
+	public JsonParseException(String exception) {
+		super(exception);
 	}
 
 

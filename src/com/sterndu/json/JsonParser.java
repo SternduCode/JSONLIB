@@ -83,7 +83,6 @@ public class JsonParser {
 						if (bd.compareTo(new BigDecimal(d))==0) {
 							long l=(long) d;
 							if (l==d) {
-								l=Long.parseLong(sb1.toString());
 								byte b=(byte) l;
 								short s=(short) l;
 								int i=(int) l;
@@ -102,7 +101,7 @@ public class JsonParser {
 							else return new BigDecimalValue(bd);
 						}
 					} catch (NumberFormatException e) {
-						throw new JsonParseException("Not a correct Json-format");
+						throw new JsonParseException("Not a correct Json-format: Not a Number: " + sb1.toString());
 					}
 				case WhiteSpace:
 					c = (char) in.read();
