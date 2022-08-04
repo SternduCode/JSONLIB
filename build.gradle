@@ -1,0 +1,29 @@
+plugins {
+    id 'java-library'
+    id 'application'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+sourceSets {
+    main {
+         java {
+            srcDirs = ['src']
+         }
+    }
+
+    test {
+        java {
+            srcDirs = ['test']
+        }
+    }
+}
+
+application {
+    mainClass = 'com.sterndu.json.test.Main' 
+}
+
+version = '1.2.1'
