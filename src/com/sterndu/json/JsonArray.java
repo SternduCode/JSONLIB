@@ -35,6 +35,16 @@ public class JsonArray extends ArrayList<Object> implements JsonValue {
 	}
 
 	@Override
+	public JsonValue toJsonValue() {
+		return this;
+	}
+
+	@Override
+	public JsonValue toJsonValue(Function<Object, String> function) {
+		return this;
+	}
+
+	@Override
 	public String toString() {
 		return toJson();
 	}

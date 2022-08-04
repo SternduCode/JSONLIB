@@ -193,7 +193,16 @@ public class JsonParser {
 	public static JsonValue parse(InputStream in) throws JsonParseException {
 		try {
 			return parse(in,new char[] {(char) in.read()});
-		} catch (JsonParseException | IOException e) {
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public static JsonValue parse(String str) throws JsonParseException {
+		try {
+			return parse(new ByteArrayInputStream(str.getBytes("UTF-8")));
+		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 			return null;
 		}

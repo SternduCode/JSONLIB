@@ -26,13 +26,23 @@ public class JsonObject extends HashMap<String,Object> implements JsonValue {
 		StringBuilder sb = new StringBuilder();
 		sb.append("{\n");
 		boolean b = true;
-		for (Entry<String, Object> e: entrySet()) if (e.getValue()!=this) {
+		for (Entry<String, Object> e: entrySet()) if (e.getValue() != this) {
 			if (b) b = false;
 			else sb.append(",\n");
 			sb.append("\"" + e.getKey() + "\" : ");
 			sb.append(JsonUtil.serialize(e.getValue(), function));
 		}
 		return sb.toString().replace("\n", "\n\t") + "\n}";
+	}
+
+	@Override
+	public JsonValue toJsonValue() {
+		return this;
+	}
+
+	@Override
+	public JsonValue toJsonValue(Function<Object, String> function) {
+		return this;
 	}
 
 	@Override
