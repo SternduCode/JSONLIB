@@ -26,4 +26,4 @@ application {
     mainClass = 'com.sterndu.json.test.Main' 
 }
 
-version = '1.2.1'
+version = ''
