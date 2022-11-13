@@ -68,7 +68,7 @@ public class JsonParser {
 						if (temp=='"' && last != '\\') { d_arr[0]=(char) in.read(); return new StringValue(sb.toString()); }
 						else { sb.append(temp); last = temp;}
 					}
-					throw new JsonParseException("Not a correct Json-format");
+					throw new JsonParseException("Not a correct Json-format: " + sb.toString());
 				case Number:
 					StringBuilder sb1=new StringBuilder();
 					sb1.append(c);
@@ -174,7 +174,7 @@ public class JsonParser {
 						return jo;
 					} else throw new JsonParseException("Not a correct Json-format");
 			}
-			throw new JsonParseException("Not a correct Json-format");
+			throw new JsonParseException("Not a correct Json-format: " + c);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;
