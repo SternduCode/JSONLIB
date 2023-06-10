@@ -1,42 +1,25 @@
-package com.sterndu.json;
+@file:JvmName("StringValue")
+package com.sterndu.json
 
-import java.util.function.Function;
+class StringValue @JvmOverloads constructor(var value: String = "") : JsonValue {
 
-public class StringValue implements JsonValue {
-
-	private String value = "";
-
-	public StringValue(String value) {
-		this.value = value;
+	override fun toJson(): String {
+		return "\"$value\""
 	}
 
-	public String getValue() { return value; }
-
-	public void setValue(String value) { this.value = value; }
-
-	@Override
-	public String toJson() {
-		return "\"" + value + "\"";
+	override fun toJson(function: Function1<Any?, String>): String {
+		return "\"$value\""
 	}
 
-	@Override
-	public String toJson(Function<Object, String> function) {
-		return "\"" + value + "\"";
+	override fun toJsonValue(): JsonValue {
+		return this
 	}
 
-	@Override
-	public JsonValue toJsonValue() {
-		return this;
+	override fun toJsonValue(function: Function1<Any?, String>): JsonValue {
+		return this
 	}
 
-	@Override
-	public JsonValue toJsonValue(Function<Object, String> function) {
-		return this;
+	override fun toString(): String {
+		return toJson()
 	}
-
-	@Override
-	public String toString() {
-		return toJson();
-	}
-
 }

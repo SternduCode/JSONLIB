@@ -1,46 +1,40 @@
-package com.sterndu.json;
+@file:JvmName("FloatValue")
+package com.sterndu.json
 
-import java.util.Locale;
-import java.util.function.Function;
+import java.util.*
 
-public class FloatValue implements NumberValue {
+class FloatValue @JvmOverloads constructor(value: Float = 0.0f) : NumberValue {
+	private var valueFloat = value
 
-	private float value = 0.0f;
-
-	public FloatValue(float value) {
-		this.value = value;
+	fun getValueFloat(): Float {
+		return valueFloat
 	}
 
-	@Override
-	public Number getValue() { return value; }
-
-	public float getValueFloat() { return value; }
-
-	public void setValue(float value) { this.value = value; }
-
-	@Override
-	public String toJson() {
-		return String.format(Locale.US, "%g", value);
+	override fun getValue(): Number {
+		return valueFloat
 	}
 
-	@Override
-	public String toJson(Function<Object, String> function) {
-		return String.format(Locale.US, "%g", value);
+	fun setValue(value: Float) {
+		valueFloat = value
 	}
 
-	@Override
-	public JsonValue toJsonValue() {
-		return this;
+	override fun toJson(): String {
+		return String.format(Locale.US, "%g", valueFloat)
 	}
 
-	@Override
-	public JsonValue toJsonValue(Function<Object, String> function) {
-		return this;
+	override fun toJson(function: (Any?) -> String): String {
+		return String.format(Locale.US, "%g", valueFloat)
 	}
 
-	@Override
-	public String toString() {
-		return toJson();
+	override fun toJsonValue(): JsonValue {
+		return this
 	}
 
+	override fun toJsonValue(function: (Any?) -> String): JsonValue {
+		return this
+	}
+
+	override fun toString(): String {
+		return toJson()
+	}
 }

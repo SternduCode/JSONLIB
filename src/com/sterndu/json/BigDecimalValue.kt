@@ -1,47 +1,42 @@
-package com.sterndu.json;
+@file:JvmName("BigDecimalValue")
+package com.sterndu.json
 
-import java.math.BigDecimal;
-import java.util.Locale;
-import java.util.function.Function;
+import java.math.BigDecimal
+import java.util.*
 
-public class BigDecimalValue implements NumberValue {
+class BigDecimalValue @JvmOverloads constructor(value: BigDecimal = BigDecimal.valueOf(0.0)) : NumberValue {
 
-	private BigDecimal value = BigDecimal.valueOf(0.0d);
+	private var valueBigDecimal = value
 
-	public BigDecimalValue(BigDecimal value) {
-		this.value = value;
+	fun getValueBigDecimal(): BigDecimal {
+		return valueBigDecimal
 	}
 
-	@Override
-	public Number getValue() { return value; }
-
-	public BigDecimal getValueBigDecimal() { return value; }
-
-	public void setValue(BigDecimal value) { this.value = value; }
-
-	@Override
-	public String toJson() {
-		return String.format(Locale.US, "%g", value);
+	override fun getValue(): Number {
+		return valueBigDecimal
 	}
 
-	@Override
-	public String toJson(Function<Object, String> function) {
-		return String.format(Locale.US, "%g", value);
+	fun setValue(value: BigDecimal) {
+		valueBigDecimal = value
 	}
 
-	@Override
-	public JsonValue toJsonValue() {
-		return this;
+	override fun toJson(): String {
+		return String.format(Locale.US, "%g", valueBigDecimal)
 	}
 
-	@Override
-	public JsonValue toJsonValue(Function<Object, String> function) {
-		return this;
+	override fun toJson(function: (Any?) -> String): String {
+		return String.format(Locale.US, "%g", valueBigDecimal)
 	}
 
-	@Override
-	public String toString() {
-		return toJson();
+	override fun toJsonValue(): JsonValue {
+		return this
 	}
 
+	override fun toJsonValue(function: (Any?) -> String): JsonValue {
+		return this
+	}
+
+	override fun toString(): String {
+		return toJson()
+	}
 }

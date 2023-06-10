@@ -1,36 +1,27 @@
-package com.sterndu.json;
+@file:JvmName("NullValue")
+package com.sterndu.json
 
-import java.util.function.Function;
+class NullValue : JsonValue {
+	val value: Any?
+		get() = null
 
-public class NullValue implements JsonValue {
-
-	public Object getValue() {
-		return null;
+	override fun toJson(): String {
+		return "null"
 	}
 
-	@Override
-	public String toJson() {
-		return "null";
+	override fun toJson(function: Function1<Any?, String>): String {
+		return "null"
 	}
 
-	@Override
-	public String toJson(Function<Object, String> function) {
-		return "null";
+	override fun toJsonValue(): JsonValue {
+		return this
 	}
 
-	@Override
-	public JsonValue toJsonValue() {
-		return this;
+	override fun toString(): String {
+		return toJson()
 	}
 
-	@Override
-	public JsonValue toJsonValue(Function<Object, String> function) {
-		return this;
+	override fun toJsonValue(function: Function1<Any?, String>): JsonValue {
+		return this
 	}
-
-	@Override
-	public String toString() {
-		return toJson();
-	}
-
 }

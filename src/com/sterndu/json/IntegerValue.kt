@@ -1,45 +1,38 @@
-package com.sterndu.json;
+@file:JvmName("IntegerValue")
+package com.sterndu.json
 
-import java.util.function.Function;
+class IntegerValue @JvmOverloads constructor(value: Int = 0) : NumberValue {
+	private var valueInt = value
 
-public class IntegerValue implements NumberValue {
-
-	private int value = 0;
-
-	public IntegerValue(int value) {
-		this.value = value;
+	fun getValueInt(): Int {
+		return valueInt
 	}
 
-	@Override
-	public Number getValue() { return value; }
-
-	public int getValueInt() { return value; }
-
-	public void setValue(int value) { this.value = value; }
-
-	@Override
-	public String toJson() {
-		return value + "";
+	override fun getValue(): Number {
+		return valueInt
 	}
 
-	@Override
-	public String toJson(Function<Object, String> function) {
-		return value + "";
+	fun setValue(value: Int) {
+		valueInt = value
 	}
 
-	@Override
-	public JsonValue toJsonValue() {
-		return this;
+	override fun toJson(): String {
+		return valueInt.toString() + ""
 	}
 
-	@Override
-	public JsonValue toJsonValue(Function<Object, String> function) {
-		return this;
+	override fun toJson(function: (Any?) -> String): String {
+		return valueInt.toString() + ""
 	}
 
-	@Override
-	public String toString() {
-		return toJson();
+	override fun toJsonValue(): JsonValue {
+		return this
 	}
 
+	override fun toJsonValue(function: (Any?) -> String): JsonValue {
+		return this
+	}
+
+	override fun toString(): String {
+		return toJson()
+	}
 }

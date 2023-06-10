@@ -1,51 +1,41 @@
-package com.sterndu.json.test;
+@file:JvmName("Main")
+package com.sterndu.json.test
 
-import java.io.*;
-import java.math.*;
-import com.sterndu.json.*;
+import com.sterndu.json.JsonArray
+import com.sterndu.json.JsonObject
+import com.sterndu.json.JsonParseException
+import com.sterndu.json.parse
+import com.sterndu.util.Util
+import java.math.BigDecimal
+import java.math.BigInteger
 
-public class Main {
-
-	public static InputStream getStringStream(String str) {
-		try {
-			return new ByteArrayInputStream(str.getBytes("UTF-8"));
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			return null;
-		}
+fun main() {
+	val obj = JsonObject()
+	val alp = JsonObject()
+	obj["alpha"] = alp
+	val arr = JsonArray()
+	obj["arr"] = arr
+	arr.add(1)
+	arr.add(true)
+	arr.add("hi")
+	alp["d"] = 5
+	alp["c"] = true
+	alp["h"] = null
+	alp["z"] = "wdym"
+	println(obj.toJson())
+	arr.add(null)
+	arr.add(false)
+	arr.add(arr)
+	arr.add(0.3)
+	arr.add(1.0 / 3.0)
+	try {
+		println(obj.toJson())
+		val jv = parse(Util.getStringStream(obj.toJson()))
+		println(jv!!.toJson())
+		var bi = BigInteger.valueOf(1852805403500234500L)
+		bi = bi.pow(6)
+		System.out.printf("%e%n", BigDecimal(bi))
+	} catch (e: JsonParseException) {
+		e.printStackTrace()
 	}
-
-	public static void main(String[] args) {
-		JsonObject obj = new JsonObject();
-		JsonObject alp = new JsonObject();
-		obj.put("alpha", alp);
-		JsonArray arr = new JsonArray();
-		obj.put("arr", arr);
-		arr.add(1);
-		arr.add(true);
-		arr.add("hi");
-		alp.put("d", 5);
-		alp.put("c", true);
-		alp.put("h", null);
-		alp.put("z", "wdym");
-		System.out.println(obj.toJson());
-		arr.add(null);
-		arr.add(false);
-		arr.add(arr);
-		arr.add(0.3d);
-		arr.add(1.0d / 3.0d);
-		try {
-			System.out.println(obj.toJson());
-			JsonValue jv = JsonParser.parse(getStringStream(obj.toJson()));
-			System.out.println(jv.toJson());
-
-			BigInteger bi = BigInteger.valueOf(1852805403500234500l);
-			bi = bi.pow(6);
-			System.out.println(String.format("%e", new BigDecimal(bi)));
-
-		} catch (JsonParseException e) {
-			e.printStackTrace();
-		}
-	}
-
 }

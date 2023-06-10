@@ -1,45 +1,39 @@
-package com.sterndu.json;
+@file:JvmName("ShortValue")
+package com.sterndu.json
 
-import java.util.function.Function;
+class ShortValue @JvmOverloads constructor(value: Short = 0) : NumberValue {
 
-public class ShortValue implements NumberValue {
+	private var valueShort: Short = value
 
-	private short value = 0;
-
-	public ShortValue(short value) {
-		this.value = value;
+	fun getValueShort(): Short {
+		return valueShort
 	}
 
-	@Override
-	public Number getValue() { return value; }
-
-	public short getValueShort() { return value; }
-
-	public void setValue(short value) { this.value = value; }
-
-	@Override
-	public String toJson() {
-		return value + "";
+	override fun getValue(): Number {
+		return valueShort
 	}
 
-	@Override
-	public String toJson(Function<Object, String> function) {
-		return value + "";
+	fun setValue(value: Short) {
+		valueShort = value
 	}
 
-	@Override
-	public JsonValue toJsonValue() {
-		return this;
+	override fun toJson(): String {
+		return valueShort.toString() + ""
 	}
 
-	@Override
-	public JsonValue toJsonValue(Function<Object, String> function) {
-		return this;
+	override fun toJson(function: Function1<Any?, String>): String {
+		return valueShort.toString() + ""
 	}
 
-	@Override
-	public String toString() {
-		return toJson();
+	override fun toJsonValue(): JsonValue {
+		return this
 	}
 
+	override fun toJsonValue(function: Function1<Any?, String>): JsonValue {
+		return this
+	}
+
+	override fun toString(): String {
+		return toJson()
+	}
 }

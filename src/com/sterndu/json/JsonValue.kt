@@ -1,25 +1,26 @@
-package com.sterndu.json;
+@file:JvmName("JsonValue")
+package com.sterndu.json
 
-import java.util.function.Function;
+import java.util.function.Function
 
-public interface JsonValue {
-	default String toJson() {
-		return toJsonValue().toJson();
+interface JsonValue {
+	fun toJson(): String {
+		return toJsonValue().toJson()
 	}
 
-	default String toJson(Function<Object, String> function) {
-		return toJsonValue(function).toJson();
+	fun toJson(function: (Any?) -> String = { it.toString() }): String {
+		return toJsonValue(function).toJson()
 	}
 
 	/**
 	 *
 	 * @return a JsonValue that is not this. Meant for Sub-Classes
 	 */
-	JsonValue toJsonValue();
+	fun toJsonValue(): JsonValue
 
 	/**
 	 *
 	 * @return a JsonValue that is not this. Meant for Sub-Classes
 	 */
-	JsonValue toJsonValue(Function<Object, String> function);
+	fun toJsonValue(function: (Any?) -> String = { it.toString() }): JsonValue
 }

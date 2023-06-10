@@ -1,7 +1,6 @@
-package com.sterndu.json;
+@file:JvmName("NumberValue")
+package com.sterndu.json
 
-public interface NumberValue extends JsonValue {
-
-	Number getValue() ;
-
+interface NumberValue : JsonValue {
+	fun getValue(): Number
 }

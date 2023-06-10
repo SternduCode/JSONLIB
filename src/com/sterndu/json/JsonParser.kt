@@ -1,211 +1,220 @@
-package com.sterndu.json;
+@file:JvmName("JsonParser")
+package com.sterndu.json
 
-import java.io.*;
-import java.math.*;
-import java.util.Arrays;
+import java.io.*
+import java.math.BigDecimal
+import java.util.*
 
-public class JsonParser {
+@Throws(JsonParseException::class)
+private fun parse(`in`: InputStream, dataArray: CharArray): JsonValue? {
+	return try {
+		var cur: Type? = null
+		var char = dataArray[0]
+		for (t in Type.values()) if (t.isPartOf(char)) cur = t
 
-	private enum Type {
-		WhiteSpace(' ', '	', '\n', '\r'),
-		Number('-', '+', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', 'E', 'e'),
-		String('"'),
-		Array('[', ']'),
-		Object('{', '}');
-
-		private final char[] chars;
-
-		Type(char... chars) {
-			this.chars = chars;
-			Arrays.sort(this.chars);
-		}
-
-		public boolean isPartOf(char c) {
-			return Arrays.binarySearch(chars, c) >= 0;
-		}
-
-	}
-
-	private static JsonValue parse(InputStream in, char[] d_arr) throws JsonParseException {
-		try {
-			Type cur = null;
-			char c = d_arr[0];
-			for (Type t: Type.values()) if (t.isPartOf(c)) cur = t;
-			if (cur == null) switch (c) {
-				case 'f':
-					char[] c_arr = new char[] {'a', 'l', 's', 'e'};
-					for (int i = 0; i < c_arr.length; i++) if ((char) in.read() != c_arr[i]) break;
-					else if (i == c_arr.length - 1) {
-						d_arr[0] = (char) in.read();
-						return new BoolValue(false);
+		while (`in`.available() > 0) when (cur) {
+			Type.String -> {
+				val sb = StringBuilder()
+				var last = 0.toChar()
+				while (`in`.available() > 0) {
+					val temp = `in`.read().toChar()
+					if (temp == '"' && last != '\\') {
+						dataArray[0] = `in`.read().toChar()
+						return StringValue(sb.toString())
+					} else {
+						sb.append(temp)
+						last = temp
 					}
-					throw new JsonParseException("Not a correct Json-format");
-				case 't':
-					char[] c_arr1 = new char[] {'r', 'u', 'e'};
-					for (int i = 0; i < c_arr1.length; i++) if ((char) in.read() != c_arr1[i]) break;
-					else if (i == c_arr1.length - 1) {
-						d_arr[0] = (char) in.read();
-						return new BoolValue(true);
-					}
-					throw new JsonParseException("Not a correct Json-format");
-				case 'n':
-					char[] c_arr2 = new char[] {'u', 'l', 'l'};
-					for (int i = 0; i < c_arr2.length; i++) if ((char) in.read() != c_arr2[i]) break;
-					else if (i == c_arr2.length - 1) {
-						d_arr[0] = (char) in.read();
-						return new NullValue();
-					}
-					throw new JsonParseException("Not a correct Json-format");
-				default:
-					throw new JsonParseException("Not a correct Json-format");
+				}
+				throw JsonParseException("Not a correct Json-format: $sb")
 			}
-			while (in.available() > 0) switch (cur) {
-				case String:
-					StringBuilder sb=new StringBuilder();
-					char last = 0;
-					while (in.available() > 0) {
-						char temp = (char) in.read();
-						if (temp=='"' && last != '\\') { d_arr[0]=(char) in.read(); return new StringValue(sb.toString()); }
-						else { sb.append(temp); last = temp;}
+
+			Type.Number -> {
+				val sb = StringBuilder()
+				sb.append(char)
+				while (`in`.available() > 0) {
+					val temp = `in`.read().toChar()
+					if (cur.isPartOf(temp)) sb.append(temp)
+					else {
+						dataArray[0] = temp
+						break
 					}
-					throw new JsonParseException("Not a correct Json-format: " + sb.toString());
-				case Number:
-					StringBuilder sb1=new StringBuilder();
-					sb1.append(c);
-					while (in.available() > 0) {
-						char temp = (char) in.read();
-						if (cur.isPartOf(temp)) sb1.append(temp);
-						else { d_arr[0]=temp; break; }
-					}
-					try {
-						BigDecimal bd=new BigDecimal(sb1.toString());
-						double d=bd.doubleValue();
-						if (bd.compareTo(new BigDecimal(d))==0) {
-							long l=(long) d;
-							if (l==d) {
-								byte b=(byte) l;
-								short s=(short) l;
-								int i=(int) l;
-								if (b==l) return new ByteValue(b);
-								else if (s==l) return new ShortValue(s);
-								else if (i==l) return new IntegerValue(i);
-								else return new LongValue(l);
-							} else {
-								float f=(float) d;
-								if (f==d) return new FloatValue(f);
-								else return new DoubleValue(d);
+				}
+				return try {
+					val bd = BigDecimal(sb.toString())
+					val d = bd.toDouble()
+					if (bd.compareTo(BigDecimal(d)) == 0) {
+						val l = d.toLong()
+						if (l.toDouble() == d) {
+							val b = l.toByte()
+							val s = l.toShort()
+							val i = l.toInt()
+							when (l) {
+								b.toLong() -> ByteValue(b)
+								s.toLong() -> ShortValue(s)
+								i.toLong() -> IntegerValue(i)
+								else -> LongValue(l)
 							}
 						} else {
-							BigInteger bi=bd.toBigInteger();
-							if (bd.compareTo(new BigDecimal(bi))==0) return new BigIntegerValue(bi);
-							else return new BigDecimalValue(bd);
+							val f = d.toFloat()
+							if (f.toDouble() == d) FloatValue(f) else DoubleValue(d)
 						}
-					} catch (NumberFormatException e) {
-						throw new JsonParseException("Not a correct Json-format: Not a Number: " + sb1.toString());
+					} else {
+						val bi = bd.toBigInteger()
+						if (bd.compareTo(BigDecimal(bi)) == 0) BigIntegerValue(bi) else BigDecimalValue(bd)
 					}
-				case WhiteSpace:
-					c = (char) in.read();
-					cur=null;
-					for (Type t: Type.values()) if (t.isPartOf(c)) cur = t;
-					if (cur == null) switch (c) {
-						case 'f':
-							char[] c_arr = new char[] {'a', 'l', 's', 'e'};
-							for (int i = 0; i < c_arr.length; i++) if ((char) in.read() != c_arr[i]) break;
-							else if (i == 2) return new BoolValue(false);
-							throw new JsonParseException("Not a correct Json-format");
-						case 't':
-							char[] c_arr1 = new char[] {'r', 'u', 'e'};
-							for (int i = 0; i < c_arr1.length; i++) if ((char) in.read() != c_arr1[i]) break;
-							else if (i == 2) return new BoolValue(true);
-							throw new JsonParseException("Not a correct Json-format");
-						case 'n':
-							char[] c_arr2 = new char[] {'u', 'l', 'l'};
-							for (int i = 0; i < c_arr2.length; i++) if ((char) in.read() != c_arr2[i]) break;
-							else if (i == 2) return new NullValue();
-							throw new JsonParseException("Not a correct Json-format");
-						default:
-							throw new JsonParseException("Not a correct Json-format");
-					}
-					continue;
-				case Array:
-					JsonArray ja=new JsonArray();
-					char[] ca_arr=new char[] {(char) in.read()};
-					do {
-						while (in.available() > 0) if (ca_arr[0] == ',' | Type.WhiteSpace.isPartOf(ca_arr[0])) ca_arr[0] = (char) in.read();
-						else break;
-						if (ca_arr[0] == ']') break;
-						ja.add(parse(in, ca_arr));
-					} while (ca_arr[0]==','|Type.WhiteSpace.isPartOf(ca_arr[0]));
-					if (ca_arr[0] == ']') {
-						d_arr[0] = (char) in.read();
-						return ja;
-					} else throw new JsonParseException("Not a correct Json-format");
-				case Object:
-					JsonObject jo = new JsonObject();
-					char ba_arr[] = new char[] {(char) in.read()};
-					do {
-						while (in.available() > 0)
-							if (ba_arr[0] == ',' | Type.WhiteSpace.isPartOf(ba_arr[0])) ba_arr[0] = (char) in.read();
-							else break;
-						if (ba_arr[0] == '}') break;
-						String name = "";
-						if (ba_arr[0] == '"') {
-							StringBuilder sb2 = new StringBuilder();
-							char last1 = 0;
-							while (in.available() > 0) {
-								char temp = (char) in.read();
-								if (temp == '"' && last1 != '\\') {
-									ba_arr[0] = (char) in.read();
-									name = sb2.toString();
-									break;
-								} else {
-									sb2.append(temp);
-									last1 = temp;
-								}
-							}
-						} else throw new JsonParseException("Not a correct Json-format");
-						while (in.available() > 0)
-							if (ba_arr[0] == ':' | Type.WhiteSpace.isPartOf(ba_arr[0])) ba_arr[0] = (char) in.read();
-							else break;
-						jo.put(name, parse(in, ba_arr));
-					} while (ba_arr[0] == ',' | Type.WhiteSpace.isPartOf(ba_arr[0]));
-					if (ba_arr[0] == '}') {
-						d_arr[0] = (char) in.read();
-						return jo;
-					} else throw new JsonParseException("Not a correct Json-format");
+				} catch (e: NumberFormatException) {
+					throw JsonParseException("Not a correct Json-format: Not a Number: $sb")
+				}
 			}
-			throw new JsonParseException("Not a correct Json-format: " + c);
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
+
+			Type.WhiteSpace, null -> {
+				if (cur == Type.WhiteSpace) {
+					char = `in`.read().toChar()
+					cur = null
+
+					for (t in Type.values()) if (t.isPartOf(char)) cur = t
+				}
+
+				if (cur == null) when (char) {
+					'f' -> {
+						val data = charArrayOf('a', 'l', 's', 'e')
+						for (i in data.indices) {
+							if (`in`.read().toChar() != data[i]) break else if (i == data.size - 1) {
+								dataArray[0] = `in`.read().toChar()
+								return BoolValue(false)
+							}
+						}
+						throw JsonParseException("Not a correct Json-format")
+					}
+
+					't' -> {
+						val data = charArrayOf('r', 'u', 'e')
+						for (i in data.indices) {
+							if (`in`.read().toChar() != data[i]) break else if (i == data.size - 1) {
+								dataArray[0] = `in`.read().toChar()
+								return BoolValue(true)
+							}
+						}
+						throw JsonParseException("Not a correct Json-format")
+					}
+
+					'n' -> {
+						val data = charArrayOf('u', 'l', 'l')
+						for (i in data.indices) {
+							if (`in`.read().toChar() != data[i]) break else if (i == data.size - 1) {
+								dataArray[0] = `in`.read().toChar()
+								return NullValue()
+							}
+						}
+						throw JsonParseException("Not a correct Json-format")
+					}
+
+					else -> throw JsonParseException("Not a correct Json-format")
+				}
+				continue
+			}
+
+			Type.Array -> {
+				val ja = JsonArray()
+				val charArray = charArrayOf(`in`.read().toChar())
+				do {
+					while (`in`.available() > 0) if ((charArray[0] == ',')
+						or Type.WhiteSpace.isPartOf(charArray[0])) charArray[0] = `in`.read().toChar()
+					else break
+					if (charArray[0] == ']') break
+					ja.add(parse(`in`, charArray))
+				} while ((charArray[0] == ',') or Type.WhiteSpace.isPartOf(charArray[0]))
+				return if (charArray[0] == ']') {
+					dataArray[0] = `in`.read().toChar()
+					ja
+				} else throw JsonParseException("Not a correct Json-format")
+			}
+
+			Type.Object -> {
+				val jo = JsonObject()
+				val charArray = charArrayOf(`in`.read().toChar())
+				do {
+					while (`in`.available() > 0) if ((charArray[0] == ',')
+						or Type.WhiteSpace.isPartOf(charArray[0])) charArray[0] = `in`.read().toChar()
+					else break
+					if (charArray[0] == '}') break
+					var name = ""
+					if (charArray[0] == '"') {
+						val sb = StringBuilder()
+						var last = 0.toChar()
+						while (`in`.available() > 0) {
+							val temp = `in`.read().toChar()
+							if (temp == '"' && last != '\\') {
+								charArray[0] = `in`.read().toChar()
+								name = sb.toString()
+								break
+							} else {
+								sb.append(temp)
+								last = temp
+							}
+						}
+					} else throw JsonParseException("Not a correct Json-format")
+					while (`in`.available() > 0) if ((charArray[0] == ':')
+						or Type.WhiteSpace.isPartOf(charArray[0])) charArray[0] = `in`.read().toChar()
+					else break
+					jo[name] = parse(`in`, charArray)
+				} while ((charArray[0] == ',') or Type.WhiteSpace.isPartOf(charArray[0]))
+				return if (charArray[0] == '}') {
+					dataArray[0] = `in`.read().toChar()
+					jo
+				} else throw JsonParseException("Not a correct Json-format")
+			}
 		}
+		throw JsonParseException("Not a correct Json-format: $char")
+	} catch (e: IOException) {
+		e.printStackTrace()
+		null
+	}
+}
+
+@Throws(JsonParseException::class)
+fun parse(file: File): JsonValue? {
+	return try {
+		parse(FileInputStream(file))
+	} catch (e: FileNotFoundException) {
+		e.printStackTrace()
+		null
+	}
+}
+
+@Throws(JsonParseException::class)
+fun parse(inputStream: InputStream): JsonValue? {
+	return try {
+		parse(inputStream, charArrayOf(inputStream.read().toChar()))
+	} catch (e: IOException) {
+		e.printStackTrace()
+		null
+	}
+}
+
+@Throws(JsonParseException::class)
+fun parse(str: String): JsonValue? {
+	return try {
+		parse(ByteArrayInputStream(str.toByteArray(charset("UTF-8"))))
+	} catch (e: UnsupportedEncodingException) {
+		e.printStackTrace()
+		null
+	}
+}
+
+private enum class Type(private vararg val chars: Char) {
+	WhiteSpace(' ', '	', '\n', '\r'),
+	Number('-', '+', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', 'E', 'e'),
+	String('"'),
+	Array('[', ']'),
+	Object('{', '}');
+
+	init {
+		Arrays.sort(chars)
 	}
 
-	public static JsonValue parse(File f) throws JsonParseException {
-		try {
-			return parse(new FileInputStream(f));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			return null;
-		}
+	fun isPartOf(c: Char): Boolean {
+		return Arrays.binarySearch(chars, c) >= 0
 	}
-
-	public static JsonValue parse(InputStream in) throws JsonParseException {
-		try {
-			return parse(in,new char[] {(char) in.read()});
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	public static JsonValue parse(String str) throws JsonParseException {
-		try {
-			return parse(new ByteArrayInputStream(str.getBytes("UTF-8")));
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
 }

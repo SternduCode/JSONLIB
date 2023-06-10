@@ -1,45 +1,40 @@
-package com.sterndu.json;
+@file:JvmName("LongValue")
+package com.sterndu.json
 
-import java.util.function.Function;
+import java.util.function.Function
 
-public class LongValue implements NumberValue {
+class LongValue @JvmOverloads constructor(value: Long = 0) : NumberValue {
+	private var valueLong: Long = value
 
-	private long value = 0;
-
-	public LongValue(long value) {
-		this.value = value;
+	fun getValueLong(): Long {
+		return valueLong
 	}
 
-	@Override
-	public Number getValue() { return value; }
-
-	public long getValueLong() { return value; }
-
-	public void setValue(long value) { this.value = value; }
-
-	@Override
-	public String toJson() {
-		return value + "";
+	override fun getValue(): Number {
+		return valueLong
 	}
 
-	@Override
-	public String toJson(Function<Object, String> function) {
-		return value + "";
+	fun setValue(value: Long) {
+		valueLong = value
 	}
 
-	@Override
-	public JsonValue toJsonValue() {
-		return this;
+	override fun toJson(): String {
+		return valueLong.toString() + ""
 	}
 
-	@Override
-	public JsonValue toJsonValue(Function<Object, String> function) {
-		return this;
+	override fun toJson(function: (Any?) -> String): String {
+		return valueLong.toString() + ""
 	}
 
-	@Override
-	public String toString() {
-		return toJson();
+	override fun toJsonValue(): JsonValue {
+		return this
 	}
 
+	override fun toJsonValue(function: (Any?) -> String): JsonValue {
+		return this
+	}
+
+	override fun toString(): String {
+		return toJson()
+	}
 }

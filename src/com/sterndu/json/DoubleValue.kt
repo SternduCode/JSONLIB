@@ -1,46 +1,40 @@
-package com.sterndu.json;
+@file:JvmName("DoubleValue")
+package com.sterndu.json
 
-import java.util.Locale;
-import java.util.function.Function;
+import java.util.*
 
-public class DoubleValue implements NumberValue {
+class DoubleValue @JvmOverloads constructor(value: Double = 0.0) : NumberValue {
+	private var valueDouble = value
 
-	private double value = 0.0d;
-
-	public DoubleValue(double value) {
-		this.value = value;
+	fun getValueDouble(): Double {
+		return valueDouble
 	}
 
-	@Override
-	public Number getValue() { return value; }
-
-	public double getValueDouble() { return value; }
-
-	public void setValue(double value) { this.value = value; }
-
-	@Override
-	public String toJson() {
-		return String.format(Locale.US, "%g", value);
+	override fun getValue(): Number {
+		return valueDouble
 	}
 
-	@Override
-	public String toJson(Function<Object, String> function) {
-		return String.format(Locale.US, "%g", value);
+	fun setValue(value: Double) {
+		valueDouble = value
 	}
 
-	@Override
-	public JsonValue toJsonValue() {
-		return this;
+	override fun toJson(): String {
+		return String.format(Locale.US, "%g", valueDouble)
 	}
 
-	@Override
-	public JsonValue toJsonValue(Function<Object, String> function) {
-		return this;
+	override fun toJson(function: Function1<Any?, String>): String {
+		return String.format(Locale.US, "%g", valueDouble)
 	}
 
-	@Override
-	public String toString() {
-		return toJson();
+	override fun toJsonValue(): JsonValue {
+		return this
 	}
 
+	override fun toJsonValue(function: Function1<Any?, String>): JsonValue {
+		return this
+	}
+
+	override fun toString(): String {
+		return toJson()
+	}
 }

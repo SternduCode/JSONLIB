@@ -1,42 +1,25 @@
-package com.sterndu.json;
+@file:JvmName("BoolValue")
+package com.sterndu.json
 
-import java.util.function.Function;
+class BoolValue @JvmOverloads constructor(var value: Boolean = false) : JsonValue {
 
-public class BoolValue implements JsonValue {
-
-	private boolean value = false;
-
-	public BoolValue(boolean value) {
-		this.value = value;
+	override fun toJson(): String {
+		return value.toString()
 	}
 
-	public boolean getValue() { return value; }
-
-	public void setValue(boolean value) { this.value = value; }
-
-	@Override
-	public String toJson() {
-		return "" + value;
+	override fun toJson(function: (Any?) -> String): String {
+		return value.toString()
 	}
 
-	@Override
-	public String toJson(Function<Object, String> function) {
-		return "" + value;
+	override fun toJsonValue(): JsonValue {
+		return this
 	}
 
-	@Override
-	public JsonValue toJsonValue() {
-		return this;
+	override fun toJsonValue(function: (Any?) -> String): JsonValue {
+		return this
 	}
 
-	@Override
-	public JsonValue toJsonValue(Function<Object, String> function) {
-		return this;
+	override fun toString(): String {
+		return toJson()
 	}
-
-	@Override
-	public String toString() {
-		return toJson();
-	}
-
 }

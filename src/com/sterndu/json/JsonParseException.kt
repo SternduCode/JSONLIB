@@ -1,17 +1,14 @@
-package com.sterndu.json;
+@file:JvmName("JsonParseException")
+package com.sterndu.json
 
-public class JsonParseException extends Exception {
+class JsonParseException : Exception {
+	constructor(): super()
+	constructor(exception: String) : super(exception)
 
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = -3716841024531140343L;
-
-	public JsonParseException() {}
-
-	public JsonParseException(String exception) {
-		super(exception);
+	companion object {
+		/**
+		 *
+		 */
+		private const val serialVersionUID = -3716841024531140343L
 	}
-
-
 }

@@ -1,45 +1,40 @@
-package com.sterndu.json;
+@file:JvmName("ByteValue")
+package com.sterndu.json
 
-import java.util.function.Function;
 
-public class ByteValue implements NumberValue {
+class ByteValue @JvmOverloads constructor(value: Byte = 0) : NumberValue {
 
-	private byte value = 0;
+	 private var valueByte: Byte = value
 
-	public ByteValue(byte value) {
-		this.value = value;
+	override fun getValue(): Number {
+		return valueByte
 	}
 
-	@Override
-	public Number getValue() { return value; }
-
-	public byte getValueByte() { return value; }
-
-	public void setValue(byte value) { this.value = value; }
-
-	@Override
-	public String toJson() {
-		return value + "";
+	fun getValueByte(): Byte {
+		return valueByte
 	}
 
-	@Override
-	public String toJson(Function<Object, String> function) {
-		return value + "";
+	fun setValue(value: Byte) {
+		valueByte = value
 	}
 
-	@Override
-	public JsonValue toJsonValue() {
-		return this;
+	override fun toJson(): String {
+		return valueByte.toString()
 	}
 
-	@Override
-	public JsonValue toJsonValue(Function<Object, String> function) {
-		return this;
+	override fun toJson(function: (Any?) -> String): String {
+		return valueByte.toString()
 	}
 
-	@Override
-	public String toString() {
-		return toJson();
+	override fun toJsonValue(): JsonValue {
+		return this
 	}
 
+	override fun toJsonValue(function: (Any?) -> String): JsonValue {
+		return this
+	}
+
+	override fun toString(): String {
+		return toJson()
+	}
 }
