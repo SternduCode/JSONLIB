@@ -5,7 +5,7 @@ import com.sterndu.json.JsonArray
 import com.sterndu.json.JsonObject
 import com.sterndu.json.JsonParseException
 import com.sterndu.json.parse
-import com.sterndu.util.Util
+import com.sterndu.util.*
 import java.math.BigDecimal
 import java.math.BigInteger
 
@@ -30,7 +30,7 @@ fun main() {
 	arr.add(1.0 / 3.0)
 	try {
 		println(obj.toJson())
-		val jv = parse(Util.getStringStream(obj.toJson()))
+		val jv = getStringStream(obj.toJson())?.let { parse(it) }
 		println(jv!!.toJson())
 		var bi = BigInteger.valueOf(1852805403500234500L)
 		bi = bi.pow(6)
