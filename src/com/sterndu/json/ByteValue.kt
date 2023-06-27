@@ -4,13 +4,10 @@ package com.sterndu.json
 
 class ByteValue @JvmOverloads constructor(value: Byte = 0) : NumberValue {
 
-	 private var valueByte: Byte = value
+	var valueByte: Byte = value
+		private set
 
 	override fun getValue(): Number {
-		return valueByte
-	}
-
-	fun getValueByte(): Byte {
 		return valueByte
 	}
 

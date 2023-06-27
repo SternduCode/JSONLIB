@@ -30,7 +30,7 @@ fun main() {
 	arr.add(1.0 / 3.0)
 	try {
 		println(obj.toJson())
-		val jv = getStringStream(obj.toJson())?.let { parse(it) }
+		val jv = parse(getStringStream(obj.toJson()))
 		println(jv!!.toJson())
 		var bi = BigInteger.valueOf(1852805403500234500L)
 		bi = bi.pow(6)

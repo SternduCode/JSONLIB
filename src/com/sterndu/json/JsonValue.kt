@@ -1,8 +1,6 @@
 @file:JvmName("JsonValue")
 package com.sterndu.json
 
-import java.util.function.Function
-
 interface JsonValue {
 	fun toJson(): String {
 		return toJsonValue().toJson()

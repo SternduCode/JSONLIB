@@ -1,14 +1,9 @@
 @file:JvmName("LongValue")
 package com.sterndu.json
 
-import java.util.function.Function
-
 class LongValue @JvmOverloads constructor(value: Long = 0) : NumberValue {
-	private var valueLong: Long = value
-
-	fun getValueLong(): Long {
-		return valueLong
-	}
+	var valueLong: Long = value
+		private set
 
 	override fun getValue(): Number {
 		return valueLong
