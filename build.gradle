@@ -1,3 +1,6 @@
+//file:noinspection GroovyAssignabilityCheck
+//file:noinspection GroovyUnusedAssignment
+//file:noinspection GrUnresolvedAccess
 plugins {
     id 'java-library'
     id 'application'
