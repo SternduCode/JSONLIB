@@ -1,11 +1,8 @@
 @file:JvmName("Main")
 package com.sterndu.json.test
 
-import com.sterndu.json.JsonArray
-import com.sterndu.json.JsonObject
-import com.sterndu.json.JsonParseException
-import com.sterndu.json.parse
-import com.sterndu.util.*
+import com.sterndu.json.*
+import com.sterndu.util.getStringStream
 import java.math.BigDecimal
 import java.math.BigInteger
 
@@ -21,7 +18,7 @@ fun main() {
 	alp["d"] = 5
 	alp["c"] = true
 	alp["h"] = null
-	alp["z"] = "wdym"
+	alp["z"] = "wdm"
 	println(obj.toJson())
 	arr.add(null)
 	arr.add(false)

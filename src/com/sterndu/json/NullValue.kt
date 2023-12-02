@@ -2,8 +2,8 @@
 package com.sterndu.json
 
 class NullValue : JsonValue {
-	val value: Any?
-		get() = null
+
+	val value: Any? = null
 
 	override fun toJson(): String {
 		return "null"

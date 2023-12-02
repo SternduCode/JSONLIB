@@ -8,7 +8,7 @@ import java.util.*
 private const val notACorrectJsonValue = "Not a correct Json-format"
 
 private fun findTypeOf(char: Char): Type? {
-	for (t in Type.values()) if (t.isPartOf(char)) return t
+	for (t in Type.entries) if (t.isPartOf(char)) return t
 	return null
 }
 
