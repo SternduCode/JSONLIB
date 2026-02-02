@@ -1,5 +1,5 @@
 plugins {
-	kotlin("jvm")
+	alias(libs.plugins.kotlinJvm)
 }
 
 sourceSets.main {
@@ -18,10 +18,6 @@ kotlin {
 	sourceSets.main {
 		kotlin.srcDirs("src")
 	}
-}
-
-dependencies {
-	implementation(project(":Util"))
 }
 
 tasks.withType<Jar> {

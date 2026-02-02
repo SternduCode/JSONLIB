@@ -2,7 +2,8 @@
 package com.sterndu.json.test
 
 import com.sterndu.json.*
-import com.sterndu.util.getStringStream
+import java.io.ByteArrayInputStream
+import java.io.InputStream
 import java.math.BigDecimal
 import java.math.BigInteger
 
@@ -36,3 +37,5 @@ fun main() {
 		e.printStackTrace()
 	}
 }
+
+fun getStringStream(str: String): InputStream = ByteArrayInputStream(str.toByteArray(Charsets.UTF_8))
